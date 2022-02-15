@@ -91,7 +91,7 @@
 
 <div class="container my-4 ">
 	
-	<h1 class="text-center">Signup Here</h1>
+	<h1 class="text-center">Signup Form</h1>
 	<form action="index.php" method="post">
 	
 		<div class="form-group">
