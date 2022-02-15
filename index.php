@@ -1,59 +1,68 @@
 
 <?php
-	
-  $showAlert = false;
-  $showError = false;
-  $exists=false;
-    
+  
   if($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Include file which makes the
     // Database Connection.
     include 'db.php';
     
-    $username = $_POST["name"];
+    $username = $_POST["username"];
+    $name = $_POST["name"];
+    $phone = $_POST["phone"];
+    $email=$_POST['email'];
     $password = $_POST["password"];
     $cpassword = $_POST["cpassword"];
         
-    
-    $sql = "Select * from users where name='$username'";
-    
-    $result = mysqli_query($conn, $sql);
-    
-    $num = mysqli_num_rows($result);
-    
-    // This sql query is use to check if
-    // the username is already present
-    // or not in our Database
-    if($num == 0) {
-      if(($password == $cpassword) && $exists==false) {
-    
-        $hash = password_hash($password,
-                  PASSWORD_DEFAULT);
-          
-        // Password Hashing is used here.
-        $sql = "INSERT INTO `users` ( `name`,
-          `password`, `date`) VALUES ('$username',
-          '$hash', current_timestamp())";
-    
-        $result = mysqli_query($conn, $sql);
-    
-        if ($result) {
-          $showAlert = true;
-        }
-      }
-      else {
-        $showError = "Passwords do not match";
-      }	
-    }// end if
-    
-  if($num>0)
-  {
-    $exists="Username not available";
+    $check1=mysqli_query($conn,"select username from users where username='$username'");
+    $checkrows1=mysqli_num_rows($check1);
+
+   if($checkrows1>0) {
+      echo "<script>alert('username already exist.')</script>";
+      echo "<script>window.open('index.php','_self')</script>";
+      exit();
+   }
+   $check2=mysqli_query($conn,"select phone from users where phone='$phone'");
+    $checkrows2=mysqli_num_rows($check2);
+
+   if($checkrows2>0) {
+      echo "<script>alert('phone already exist.')</script>";
+      echo "<script>window.open('index.php','_self')</script>";
+      exit();
+   }
+
+   $check3=mysqli_query($conn,"select uemail from users where uemail='$email'");
+    $checkrows3=mysqli_num_rows($check3);
+
+   if($checkrows3>0) {
+      echo "<script>alert('Email already exist.')</script>";
+      echo "<script>window.open('index.php','_self')</script>";
+      exit();
+   }
+   if($password==$cpassword){
+	   $sql="insert into `users`(username,name,phone,uemail,password,cpassword) values ('$username','$name','$phone','$email','$password','$cpassword') ";
+
+
+	   $result = mysqli_query($conn, $sql);
+	   if($result){
+		echo "<script>alert('Sign Up Successfully')</script>";
+		echo "<script>window.open('index.php','_self')</script>";
+	   exit();
+	   }
+
+	   
+
+	  
+   }
+   else{
+	echo "<script>alert('Password did not match')</script>";
+	echo "<script>window.open('index.php','_self')</script>";
+	exit();
+   }
+
+   
   }
-    
-  }//end if
-    
+   
   ?>
 
 <!DOCTYPE html>
@@ -79,58 +88,34 @@
 	
 </head>
 <body>
-<?php
-	
-	if($showAlert) {
-	
-		echo ' <div class="alert alert-success
-			alert-dismissible fade show" role="alert">
-	
-			<strong>Success!</strong> Your account is
-			now created and you can login.
-			<button type="button" class="close"
-				data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">×</span>
-			</button>
-		</div> ';
-	}
-	
-	if($showError) {
-	
-		echo ' <div class="alert alert-danger
-			alert-dismissible fade show" role="alert">
-		<strong>Error!</strong> '. $showError.'
-	
-	<button type="button" class="close"
-			data-dismiss="alert aria-label="Close">
-			<span aria-hidden="true">×</span>
-	</button>
-	</div> ';
-}
-		
-	if($exists) {
-		echo ' <div class="alert alert-danger
-			alert-dismissible fade show" role="alert">
-	
-		<strong>Error!</strong> '. $exists.'
-		<button type="button" class="close"
-			data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">×</span>
-		</button>
-	</div> ';
-	}
 
-?>
-	
 <div class="container my-4 ">
 	
 	<h1 class="text-center">Signup Here</h1>
 	<form action="index.php" method="post">
 	
 		<div class="form-group">
-			<label for="username">Username</label>
+			<label for="username">Choose Your Username</label>
 		<input type="text" class="form-control" id="username"
+			name="username" aria-describedby="emailHelp">	
+		</div>
+
+		<div class="form-group">
+			<label for="name">Name</label>
+		<input type="text" class="form-control" id="name"
 			name="name" aria-describedby="emailHelp">	
+		</div>
+
+		<div class="form-group">
+			<label for="phone">Phone</label>
+		<input type="text" class="form-control" id="phone"
+			name="phone" aria-describedby="emailHelp">	
+		</div>
+
+		<div class="form-group">
+			<label for="email">Email</label>
+		<input type="text" class="form-control" id="email"
+			name="email" aria-describedby="emailHelp">	
 		</div>
 	
 		<div class="form-group">

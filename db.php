@@ -4,7 +4,7 @@
 	$username = "root";
 	$password = "";
 
-	$database = "formsubmit";
+	$database = "formsubmit2";
 
 	// Create a connection
 	$conn = mysqli_connect($servername,
